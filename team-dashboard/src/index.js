@@ -1,0 +1,49 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+// Suppress ResizeObserver errors (common with Recharts)
+const originalError = console.error;
+const originalWarn = console.warn;
+
+console.error = (...args) => {
+  if (
+    typeof args[0] === 'string' &&
+    args[0].includes('ResizeObserver loop completed with undelivered notifications')
+  ) {
+    return;
+  }
+  originalError.call(console, ...args);
+};
+
+console.warn = (...args) => {
+  if (
+    typeof args[0] === 'string' &&
+    args[0].includes('ResizeObserver loop completed with undelivered notifications')
+  ) {
+    return;
+  }
+  originalWarn.call(console, ...args);
+};
+
+// Catch unhandled errors
+window.addEventListener('error', (event) => {
+  if (
+    event.message &&
+    event.message.includes('ResizeObserver loop completed with undelivered notifications')
+  ) {
+    event.preventDefault();
+  }
+});
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <App />
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
